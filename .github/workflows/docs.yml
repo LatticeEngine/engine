@@ -1,0 +1,51 @@
+# Builds the Doxygen API reference and publishes it on GitHub Pages.
+# One-time setup on GitHub: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # allows running it by hand from the Actions tab
+
+# Minimum rights needed to deploy to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at once; a newer push cancels the older run.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the engine
+        uses: actions/checkout@v4
+
+      - name: Install Doxygen and Graphviz
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+      - name: Configure (documentation only)
+        run: cmake -S . -B build -DLATTICE_BUILD_DOCUMENTATION=ON -DLATTICE_BUILD_TESTS=OFF
+
+      - name: Generate the documentation
+        run: cmake --build build --target lattice_docs
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/html
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

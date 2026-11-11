@@ -1,0 +1,30 @@
+# Configuration de clang-uml pour Lattice.
+# Lancer depuis engine/ (dans un terminal où vcvars64.bat est chargé) :
+#   clang-uml              -> PlantUML (.puml)
+#   clang-uml -g mermaid   -> Mermaid (.mmd)
+#
+# Tous les chemins sont relatifs à l'emplacement de CE fichier.
+# YAML : indentation avec des ESPACES uniquement, jamais de tabulations.
+
+# Dossier qui contient compile_commands.json
+compilation_database_dir: build-ninja
+
+# Dossier où écrire les diagrammes générés (ignoré par git pour l'instant)
+output_directory: build
+
+diagrams:
+  # Nom du diagramme : il devient aussi le nom du fichier généré
+  Lattice-Engine:
+    type: class
+
+    # Fichiers à analyser (doivent apparaître dans compile_commands.json)
+    glob:
+      - src/**/*.cpp
+
+    # Ne garder que ce qui appartient à ce namespace (sinon : toute la STL)
+    include:
+      namespaces:
+        - lattice
+
+    # Préfixe de namespace à masquer dans les noms des classes
+    using_namespace: lattice

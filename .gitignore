@@ -68,3 +68,6 @@ Testing/
 .cache/
 
 .vs/
+
+# Visual Studio CMake output
+out/

@@ -1,16 +1,17 @@
-#include <iostream>
+#include "Logging/Logger.h"
+#include "LatticeAssert.h"
 
-#include "Core/include/Logger/LatticeLogger.h"
-#include "Core/include/LatticeAssert.h"
-
-int main(int argc, char** argv)
+int main(int argc, char** /*argv*/)
 {
-	lattice::Logger::printMsg(lattice::LogLevel::INFO, lattice::LogCategory::CORE, "Test INFO");
-	lattice::Logger::printMsg(lattice::LogLevel::DEBUG, lattice::LogCategory::CORE, "Test DEBUG");
-	lattice::Logger::printMsg(lattice::LogLevel::WARN, lattice::LogCategory::CORE, "Test WARN");
-	lattice::Logger::printMsg(lattice::LogLevel::ERROR, lattice::LogCategory::CORE, "Test ERROR");
-	lattice::Logger::printMsg(lattice::LogLevel::CRITICAL, lattice::LogCategory::CORE, "Test CRITICAL");
-	/*LATTICE_ASSERT(1 == 1, lattice::LogCategory::RENDERER, "Test Equals");
-	LATTICE_ASSERT(1 == 2, lattice::LogCategory::RENDERER, "Test Debug break");*/
+	LATTICE_LOG_DEBUG(Core, "Test DEBUG");
+	LATTICE_LOG_INFO(Core, "Lattice {}.{}.{} starting", 0, 1, 0);
+	LATTICE_LOG_WARN(Core, "Test WARN");
+	LATTICE_LOG_ERROR(Core, "Test ERROR");
+	LATTICE_LOG_CRITICAL(Core, "Test CRITICAL");
+	LATTICE_LOG_INFO(Core, "same");
+	LATTICE_LOG_INFO(Core, "same");
+	LATTICE_LOG_INFO(Core, "same");
+
+	LATTICE_ASSERT(argc > 0, Core, "argc must be positive");
 	return 0;
 }
